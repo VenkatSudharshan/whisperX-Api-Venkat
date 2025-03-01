@@ -1,4 +1,4 @@
-# WhisperX API
+# WhisperX API-Venkat
 
 The WhisperX API is a containerized solution for transcribing audio files with diarization using the powerful [`whisperX`](https://github.com/m-bain/whisperX/) project. This API provides an easy-to-use endpoint for audio transcription and is packaged into a Docker container for easy deployment.
 
