@@ -11,8 +11,14 @@ RUN conda env create -f /app/environment.yaml
 # Trigger WhisperX to download necessary models, so we can embed them in the image
 COPY audio_en.mp3 /app
 ##RUN /bin/bash -c "source activate whisperx && cd /app; whisperx --hf_token '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' --model large-v2 --diarize --compute_type float32 --lang nl ./audio_nl.mp3"
-RUN /bin/bash -c "source activate whisperx && cd /app; whisperx --hf_token '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' --model large-v2 --diarize --compute_type float32 --lang en ./audio_en.mp3"
+ENV HF_TOKEN="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"
 
+# Activate WhisperX and run model downloads
+RUN /opt/conda/bin/conda run --no-capture-output -n whisperx \
+    whisperx --hf_token $HF_TOKEN --model large-v2 --diarize --compute_type float32 --lang nl /app/audio_nl.mp3
+
+RUN /opt/conda/bin/conda run --no-capture-output -n whisperx \
+    whisperx --hf_token $HF_TOKEN --model large-v2 --diarize --compute_type float32 --lang en /app/audio_en.mp3
 # Copy the app itself
 RUN mkdir -p /app/uploads
 COPY app.py config.py /app
