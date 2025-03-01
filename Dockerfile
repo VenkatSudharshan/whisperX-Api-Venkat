@@ -9,7 +9,7 @@ RUN apt update && apt install -y ffmpeg
 RUN conda env create -f /app/environment.yaml
 
 # Trigger WhisperX to download necessary models, so we can embed them in the image
-COPY audio_en.mp3 /app
+COPY audio_nl.mp3 audio_en.mp3 /app
 ##RUN /bin/bash -c "source activate whisperx && cd /app; whisperx --hf_token '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' --model large-v2 --diarize --compute_type float32 --lang nl ./audio_nl.mp3"
 ENV HF_TOKEN="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"
 
