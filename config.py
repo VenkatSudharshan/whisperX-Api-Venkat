@@ -1,1 +1,1 @@
-HF_TOKEN = "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"
+HF_TOKEN = "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"
