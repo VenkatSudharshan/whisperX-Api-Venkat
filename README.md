@@ -53,7 +53,7 @@ curl http://127.0.0.1:5000/transcribe -X POST -F "file=@./audio_en.mp3"
 
 Replace `./audio.mp3` with the path to your audio file.
 
-The output looks as following:
+The output looks as following:fgf
 ```
 {
    "segments" : [
