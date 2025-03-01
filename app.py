@@ -18,6 +18,7 @@ UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {"mp3", "wav", "awb", "aac", "ogg", "oga", "m4a", "wma", "amr"}
 
 app = Flask(__name__)
+api = Api(app)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Load models
@@ -27,12 +28,20 @@ diarize_model = whisperx.DiarizationPipeline(use_auth_token=config.HF_TOKEN, dev
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.route('/')
+def health_check():
+    return jsonify({"status": "healthy"}), 200
+
 @app.route('/transcribe', methods=['POST'])
-def transcribe():
+def transcribe_audio():
+    app.logger.info("Received request to /transcribe")
+    app.logger.debug(f"Request files: {request.files}")
+    
     # check if the post request has the file part
-    print(request.files)
     if 'file' not in request.files:
+        app.logger.error("No file part in request")
         return jsonify({'error': 'No file part'}), 400
+    
     file = request.files['file']
     # if user does not select file, browser also
     # submit an empty part without filename
@@ -65,5 +74,9 @@ def transcribe(audio_file):
     result = whisperx.assign_word_speakers(diarize_segments, result)
     return result
 
+# Ensure uploads directory exists
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
