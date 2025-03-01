@@ -32,7 +32,7 @@ def allowed_file(filename):
 def health_check():
     return jsonify({"status": "healthy"}), 200
 
-@app.route('/transcribe', methods=['POST'])
+@app.route('/run', methods=['POST'])
 def transcribe_audio():
     app.logger.info("Received request to /transcribe")
     app.logger.debug(f"Request files: {request.files}")
